@@ -66,7 +66,7 @@ jobs:
         run: test -d ${{ inputs.config_dir }} && cp -av ${{ inputs.config_dir }}/*.h Marlin/Marlin/
       - name: Build Marlin ${{ inputs.config_dir }}
         run: |
-          cd Marlin && pio build ${{ inputs.build_env != "NONE" && format("-e {1}", inputs.build_env) || "" }}
+          cd Marlin && pio build ${{ inputs.build_env != 'NONE' && format('-e {1}', inputs.build_env) || '' }}
       #- uses: marvinpinto/action-automatic-releases@latest
       #  with:
       #    repo_token: "${{ secrets.GITHUB_TOKEN }}"
