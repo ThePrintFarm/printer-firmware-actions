@@ -28,20 +28,10 @@ on:
         default: ""
       prefix:
         description: tag prefix to use
-        required: true
+        required: false
         type: string
         default: ""
       # original options
-      dryrun:
-        type: boolean
-        required: false
-        description: to dry run or not to dry run, that is a question
-        default: true
-      cleanup:
-        type: boolean
-        required: false
-        description: do cleanups
-        default: false
 
 jobs:
   build-marlin:
