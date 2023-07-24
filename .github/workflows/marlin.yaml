@@ -51,11 +51,10 @@ jobs:
         run: git clone https://github.com/MarlinFirmware/Marlin
       - name: Copy configuration into place
         run: |
-          ls ${{ inputs.config_dir }}
           cp -av ${{ inputs.config_dir }}/*.h Marlin/Marlin/
       - name: Clone and build Marlin ${{ inputs.config_dir }}
         run: |
-          cd Marlin && pio build ${{ inputs.build_env != 'NONE' && format('-e {0}', inputs.build_env) || '' }}
+          cd Marlin && pio run ${{ inputs.build_env != 'NONE' && format('-e {0}', inputs.build_env) || '' }}
       #- uses: marvinpinto/action-automatic-releases@latest
       #  with:
       #    repo_token: "${{ secrets.GITHUB_TOKEN }}"
