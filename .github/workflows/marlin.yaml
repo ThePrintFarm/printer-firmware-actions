@@ -51,10 +51,7 @@ jobs:
         run: git clone https://github.com/MarlinFirmware/Marlin
       - name: Copy configuration into place
         run: |
-          ls
-          pwd
-          ls config
-          find config -type d
+          ls ${{ inputs.config_dir }}
           cp -av ${{ inputs.config_dir }}/*.h Marlin/Marlin/
       - name: Clone and build Marlin ${{ inputs.config_dir }}
         run: |
