@@ -43,15 +43,12 @@ jobs:
         with:
           python-version: '3.10'
           cache: pip
-      - name: Checkout marlin
-        uses: actions/checkout@v3
-        with:
-          repository: MarlinFirmware/Marlin
-          ref: ${{ inputs.marlin_branch }}
       - name: Install PlatformIO
         run: pip install platformio
       #- name: Copy platformio.ini into place
       #  run: ${{ inputs.platformio_config != '' && format('cp -av {1} Marlin/', inputs.platformio_config) }}
+      - name: Checkout Marlin
+        run: git clone https://github.com/MarlinFirmware/Marlin
       - name: Copy configuration into place
         run: |
           ls
@@ -59,7 +56,7 @@ jobs:
           ls config
           find config -type d
           cp -av ${{ inputs.config_dir }}/*.h Marlin/Marlin/
-      - name: Build Marlin ${{ inputs.config_dir }}
+      - name: Clone and build Marlin ${{ inputs.config_dir }}
         run: |
           cd Marlin && pio build ${{ inputs.build_env != 'NONE' && format('-e {1}', inputs.build_env) || '' }}
       #- uses: marvinpinto/action-automatic-releases@latest
