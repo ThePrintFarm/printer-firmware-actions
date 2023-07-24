@@ -50,8 +50,8 @@ jobs:
           ref: ${{ inputs.marlin_branch }}
       - name: Install PlatformIO
         run: pip install platformio
-      - name: Copy platformio.ini into place
-        run: ${{ inputs.platformio_config != '' && format('cp -av {1} Marlin/', inputs.platformio_config) }}
+      #- name: Copy platformio.ini into place
+      #  run: ${{ inputs.platformio_config != '' && format('cp -av {1} Marlin/', inputs.platformio_config) }}
       - name: Copy configuration into place
         run: test -d ${{ inputs.config_dir }} && cp -av ${{ inputs.config_dir }}/*.h Marlin/Marlin/
       - name: Build Marlin ${{ inputs.config_dir }}
