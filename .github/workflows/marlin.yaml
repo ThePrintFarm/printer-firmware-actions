@@ -53,7 +53,10 @@ jobs:
       #- name: Copy platformio.ini into place
       #  run: ${{ inputs.platformio_config != '' && format('cp -av {1} Marlin/', inputs.platformio_config) }}
       - name: Copy configuration into place
-        run: cp -av ${{ inputs.config_dir }}/*.h Marlin/Marlin/
+        run: |
+          ls
+          pwd
+          cp -av ${{ inputs.config_dir }}/*.h Marlin/Marlin/
       - name: Build Marlin ${{ inputs.config_dir }}
         run: |
           cd Marlin && pio build ${{ inputs.build_env != 'NONE' && format('-e {1}', inputs.build_env) || '' }}
