@@ -1,0 +1,75 @@
+name: Build Marlin Firmwares
+
+on:
+  workflow_call:
+    inputs:
+      marlin_branch:
+        description: Marlin branch to use
+        type: string
+        required: false
+        default: bugfix-2.1.x
+      build_env:
+        description: The build 'environment' to use
+        required: false
+        type: string
+        default: ""
+      build_obj:
+        description: The build object, or resulting firmware
+        type: string
+        required: true
+      config_dir:
+        description: The directory holding your configs
+        required: true
+        type: string
+      platformio_config:
+        description: The path and filename of the file to use as platformio.ini
+        required: false
+        type: string
+        default: ""
+      prefix:
+        description: tag prefix to use
+        required: true
+        type: string
+        default: ""
+      # original options
+      dryrun:
+        type: boolean
+        required: false
+        description: to dry run or not to dry run, that is a question
+        default: true
+      cleanup:
+        type: boolean
+        required: false
+        description: do cleanups
+        default: false
+
+jobs:
+  build-marlin:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+          cache: pip
+      - name: Checkout repo
+        uses: actions/checkout@v3
+      - name: Checkout marlin
+        uses: actions/checkout@v3
+        with:
+          repository: MarlinFirmware/Marlin
+          ref: ${{ inputs.marlin_branch }}
+      - name: Install PlatformIO
+        run: pip install platformio
+      - name: Copy platformio.ini into place
+        run: test ! -z "${{ inputs.platformio_config }}" && test -f ${{ inputs.platformio_config }} && cp -v ${{ inputs.platformio_config }} Marlin/
+      - name: Copy configuration into place
+        run: test -d ${{ inputs.config_dir }} && cp -av ${{ inputs.config_dir }}/*.h Marlin/Marlin/
+      - name: Build Marlin ${{ inputs.config_dir }}
+        run: cd Marlin && pio build ${{ inputs.build_env != "" && format("-e {1}", inputs.build_env) || "" }}
+      #- uses: marvinpinto/action-automatic-releases@latest
+      #  with:
+      #    repo_token: "${{ secrets.GITHUB_TOKEN }}"
+      #    automatic_release_tag: ${{ inputs.prefix }}-${{ steps.date.outputs.tag }}
+      #    title: ${{ inputs.prefix }}-${{ steps.date.outputs.tag }}
+      #    files: |
+      #      ${{ inputs.parent }}*
