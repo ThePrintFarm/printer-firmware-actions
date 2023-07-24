@@ -37,12 +37,12 @@ jobs:
   build-marlin:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
       - uses: actions/setup-python@v4
         with:
           python-version: '3.10'
           cache: pip
-      - name: Checkout repo
-        uses: actions/checkout@v3
       - name: Checkout marlin
         uses: actions/checkout@v3
         with:
