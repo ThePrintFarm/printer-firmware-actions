@@ -12,7 +12,7 @@ on:
         description: The build 'environment' to use
         required: false
         type: string
-        default: ""
+        default: "NONE"
       build_obj:
         description: The build object, or resulting firmware
         type: string
@@ -65,7 +65,8 @@ jobs:
       - name: Copy configuration into place
         run: test -d ${{ inputs.config_dir }} && cp -av ${{ inputs.config_dir }}/*.h Marlin/Marlin/
       - name: Build Marlin ${{ inputs.config_dir }}
-        run: cd Marlin && pio build ${{ inputs.build_env != "" && format("-e {1}", inputs.build_env) || "" }}
+        run: |
+          cd Marlin && pio build ${{ inputs.build_env != "NONE" && format("-e {1}", inputs.build_env) || "" }}
       #- uses: marvinpinto/action-automatic-releases@latest
       #  with:
       #    repo_token: "${{ secrets.GITHUB_TOKEN }}"
