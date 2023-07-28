@@ -37,6 +37,9 @@ jobs:
   build-marlin:
     runs-on: ubuntu-latest
     steps:
+      - name: Get current date
+        id: date
+        run: echo "tag=$(date +%m%d%Y-%H%M%S)" >> "$GITHUB_OUTPUT"
       - name: Checkout repo
         uses: actions/checkout@v3
       - uses: actions/setup-python@v4
@@ -45,8 +48,6 @@ jobs:
           cache: pip
       - name: Install PlatformIO
         run: pip install platformio
-      #- name: Copy platformio.ini into place
-      #  run: ${{ inputs.platformio_config != '' && format('cp -av {1} Marlin/', inputs.platformio_config) }}
       - name: Checkout Marlin
         run: git clone https://github.com/MarlinFirmware/Marlin
       - name: Copy configuration into place
@@ -55,10 +56,10 @@ jobs:
       - name: Clone and build Marlin ${{ inputs.config_dir }}
         run: |
           cd Marlin && pio run ${{ inputs.build_env != 'NONE' && format('-e {0}', inputs.build_env) || '' }}
-      #- uses: marvinpinto/action-automatic-releases@latest
-      #  with:
-      #    repo_token: "${{ secrets.GITHUB_TOKEN }}"
-      #    automatic_release_tag: ${{ inputs.prefix }}-${{ steps.date.outputs.tag }}
-      #    title: ${{ inputs.prefix }}-${{ steps.date.outputs.tag }}
-      #    files: |
-      #      ${{ inputs.parent }}*
+      - uses: marvinpinto/action-automatic-releases@latest
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: ${{ inputs.prefix }}-${{ steps.date.outputs.tag }}
+          title: ${{ inputs.prefix }}-${{ steps.date.outputs.tag }}
+          files: |
+            Marlin/.pio/build/${{ inputs.build_env != 'NONE' && inputs.build_env || " firmware.bin" }}${{ inputs.parent }}*
