@@ -48,14 +48,17 @@ jobs:
       - name: Install PlatformIO
         run: pip install platformio
       - name: Checkout Marlin
-        run: git clone https://github.com/MarlinFirmware/Marlin
+        run: git clone https://github.com/MarlinFirmware/Marlin ${{ inputs.build_env }}-${{ steps.date.outputs.tag }}
       - name: Copy configuration into place
         run: |
-          cp -av ${{ inputs.config_dir }}/*.h Marlin/Marlin/
+          cp -av ${{ inputs.config_dir }}/*.h ${{ inputs.build_env }}-${{ steps.date.outputs.tag }}/Marlin/
       - name: Clone and build Marlin ${{ inputs.config_dir }}
         run: |
-          cd Marlin && pio run ${{ inputs.build_env != 'NONE' && format('-e {0}', inputs.build_env) || '' }}
+          cd ${{ inputs.build_env }}-${{ steps.date.outputs.tag }}
+          pio run ${{ inputs.build_env != 'NONE' && format('-e {0}', inputs.build_env) || '' }}
           mv -v .pio/build/${{ inputs.build_env }}/${{ inputs.build_obj != 'NONE' && inputs.build_obj || 'firmware.bin' }} ../${{ inputs.prefix }}-${{ inputs.build_env }}-${{ steps.date.outputs.tag }}-${{ inputs.build_obj != 'NONE' && inputs.build_obj || 'firmware.bin' }}
+          cd ..
+          rm -rf ${{ inputs.build_env }}-${{ steps.date.outputs.tag }}
       - uses: marvinpinto/action-automatic-releases@latest
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
