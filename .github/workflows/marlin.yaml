@@ -55,10 +55,11 @@ jobs:
       - name: Clone and build Marlin ${{ inputs.config_dir }}
         run: |
           cd Marlin && pio run ${{ inputs.build_env != 'NONE' && format('-e {0}', inputs.build_env) || '' }}
+          mv -v .pio/build/${{ inputs.build_env }}/${{ inputs.build_obj != 'NONE' && inputs.build_obj || 'firmware.bin' }} ../${{ inputs.prefix }}-${{ inputs.build_env }}-${{ steps.date.outputs.tag }}-${{ inputs.build_obj != 'NONE' && inputs.build_obj || 'firmware.bin' }}
       - uses: marvinpinto/action-automatic-releases@latest
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: ${{ inputs.prefix }}-${{ steps.date.outputs.tag }}
           title: ${{ inputs.prefix }}-${{ steps.date.outputs.tag }}
           files: |
-            Marlin/.pio/build/${{ inputs.build_env }}/${{ inputs.build_obj != 'NONE' && inputs.build_env || 'firmware.bin' }}
+            ${{ inputs.prefix }}-${{ inputs.build_env }}-${{ steps.date.outputs.tag }}-${{ inputs.build_obj != 'NONE' && inputs.build_obj || 'firmware.bin' }}
