@@ -61,4 +61,4 @@ jobs:
           automatic_release_tag: ${{ inputs.prefix }}-${{ steps.date.outputs.tag }}
           title: ${{ inputs.prefix }}-${{ steps.date.outputs.tag }}
           files: |
-            Marlin/.pio/build/${{ inputs.build_env != 'NONE' && inputs.build_env || " firmware.bin" }}${{ inputs.parent }}*
+            Marlin/.pio/build/${{ inputs.build_env != 'NONE' && inputs.build_env || firmware.bin }}${{ inputs.parent }}*
