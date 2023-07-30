@@ -57,7 +57,7 @@ jobs:
       - name: Copy configuration into place
         run: |
           cp -av ${{ inputs.config_dir }}/*.h ${{ inputs.build_env }}-${{ steps.date.outputs.tag }}/Marlin/
-          test "${{ inputs.ini_dir }}" != "NONE" && test -d ${{ inputs.ini_dir }} && cp -av ${{ inputs.ini_dir }}/*.ini ${{ inputs.build_env }}-${{ steps.date.outputs.tag }}/ini/
+          test "${{ inputs.ini_dir }}" != "NONE" && test -d ${{ inputs.ini_dir }} && cp -av ${{ inputs.ini_dir }}/*.ini ${{ inputs.build_env }}-${{ steps.date.outputs.tag }}/ini/ || echo > /dev/null
       - name: Build Marlin Firmware (${{ inputs.config_dir }})
         run: |
           cd ${{ inputs.build_env }}-${{ steps.date.outputs.tag }}
