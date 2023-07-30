@@ -16,7 +16,8 @@ on:
       build_obj:
         description: The build object, or resulting firmware
         type: string
-        required: true
+        required: false
+        default: "NONE"
       config_dir:
         description: The directory holding your configs
         required: true
