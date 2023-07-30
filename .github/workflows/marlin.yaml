@@ -27,7 +27,7 @@ on:
         type: string
         default: ""
       prefix:
-        description: tag prefix to use
+        description: Artifact name to use
         required: true
         type: string
         default: ""
@@ -36,9 +36,6 @@ jobs:
   build-marlin:
     runs-on: ubuntu-latest
     steps:
-      - name: Get current date
-        id: date
-        run: echo "tag=$(date +%m%d%Y-%H%M%S)" >> "$GITHUB_OUTPUT"
       - name: Checkout repo
         uses: actions/checkout@v3
       - uses: actions/setup-python@v4
@@ -56,13 +53,17 @@ jobs:
         run: |
           cd ${{ inputs.build_env }}-${{ steps.date.outputs.tag }}
           pio run ${{ inputs.build_env != 'NONE' && format('-e {0}', inputs.build_env) || '' }}
+          mkdir -vp ${PWD}/../firmware/
           mv -v .pio/build/${{ inputs.build_env }}/${{ inputs.build_obj != 'NONE' && inputs.build_obj || 'firmware.bin' }} ../${{ inputs.prefix }}-${{ inputs.build_env }}-${{ steps.date.outputs.tag }}-${{ inputs.build_obj != 'NONE' && inputs.build_obj || 'firmware.bin' }}
           cd ..
           rm -rf ${{ inputs.build_env }}-${{ steps.date.outputs.tag }}
-      - uses: marvinpinto/action-automatic-releases@latest
-        with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: ${{ inputs.prefix }}-${{ steps.date.outputs.tag }}
-          title: ${{ inputs.prefix }}-${{ steps.date.outputs.tag }}
-          files: |
-            ${{ inputs.prefix }}-${{ inputs.build_env }}-${{ steps.date.outputs.tag }}-${{ inputs.build_obj != 'NONE' && inputs.build_obj || 'firmware.bin' }}
+      - name: Rename build object
+        run: |
+          mkdir -vp ${{ github.workspace }}/firmware
+      # - uses: marvinpinto/action-automatic-releases@latest
+      #   with:
+      #     repo_token: "${{ secrets.GITHUB_TOKEN }}"
+      #     automatic_release_tag: ${{ inputs.prefix }}-${{ steps.date.outputs.tag }}
+      #     title: ${{ inputs.prefix }}-${{ steps.date.outputs.tag }}
+      #     files: |
+      #       ${{ inputs.prefix }}-${{ inputs.build_env }}-${{ steps.date.outputs.tag }}-${{ inputs.build_obj != 'NONE' && inputs.build_obj || 'firmware.bin' }}
