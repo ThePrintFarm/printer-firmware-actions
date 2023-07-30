@@ -22,6 +22,11 @@ on:
         description: The directory holding your configs
         required: true
         type: string
+      ini_dir:
+        description: The directory holding custom ini files for platformio
+        required: false
+        type: string
+        default: "NONE"
       platformio_config:
         description: The path and filename of the file to use as platformio.ini
         required: false
@@ -52,6 +57,7 @@ jobs:
       - name: Copy configuration into place
         run: |
           cp -av ${{ inputs.config_dir }}/*.h ${{ inputs.build_env }}-${{ steps.date.outputs.tag }}/Marlin/
+          test "${{ inputs.ini_dir }}" != "NONE" && test -d ${{ inputs.ini_dir }} && cp -av ${{ inputs.ini_dir }}/*.ini ${{ inputs.build_env }}-${{ steps.date.outputs.tag }}/ini/
       - name: Build Marlin Firmware (${{ inputs.config_dir }})
         run: |
           cd ${{ inputs.build_env }}-${{ steps.date.outputs.tag }}
