@@ -26,7 +26,7 @@ on:
         required: false
         type: string
         default: ""
-      prefix:
+      artifact_key:
         description: Artifact name to use
         required: true
         type: string
@@ -53,17 +53,12 @@ jobs:
         run: |
           cd ${{ inputs.build_env }}-${{ steps.date.outputs.tag }}
           pio run ${{ inputs.build_env != 'NONE' && format('-e {0}', inputs.build_env) || '' }}
-          mkdir -vp ${PWD}/../firmware/
-          mv -v .pio/build/${{ inputs.build_env }}/${{ inputs.build_obj != 'NONE' && inputs.build_obj || 'firmware.bin' }} ../${{ inputs.prefix }}-${{ inputs.build_env }}-${{ steps.date.outputs.tag }}-${{ inputs.build_obj != 'NONE' && inputs.build_obj || 'firmware.bin' }}
+          mkdir -vp ${{ github.workspace }}/firmware
+          mv -v .pio/build/${{ inputs.build_env }}/${{ inputs.build_obj != 'NONE' && inputs.build_obj || 'firmware.bin' }} ${{ github.workspace }}/firmware/${{ inputs.prefix }}-${{ inputs.build_env }}-${{ steps.date.outputs.tag }}-${{ inputs.build_obj != 'NONE' && inputs.build_obj || 'firmware.bin' }}
           cd ..
           rm -rf ${{ inputs.build_env }}-${{ steps.date.outputs.tag }}
-      - name: Rename build object
-        run: |
-          mkdir -vp ${{ github.workspace }}/firmware
-      # - uses: marvinpinto/action-automatic-releases@latest
-      #   with:
-      #     repo_token: "${{ secrets.GITHUB_TOKEN }}"
-      #     automatic_release_tag: ${{ inputs.prefix }}-${{ steps.date.outputs.tag }}
-      #     title: ${{ inputs.prefix }}-${{ steps.date.outputs.tag }}
-      #     files: |
-      #       ${{ inputs.prefix }}-${{ inputs.build_env }}-${{ steps.date.outputs.tag }}-${{ inputs.build_obj != 'NONE' && inputs.build_obj || 'firmware.bin' }}
+      - name: Cache the artifacts
+        uses: actions/upload-artifact@master
+        with:
+          name: ${{ inputs.artifact_key }}
+          path: ${{ github.workspace }}/firmware
