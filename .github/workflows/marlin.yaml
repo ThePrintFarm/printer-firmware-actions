@@ -32,6 +32,11 @@ on:
         required: false
         type: string
         default: ""
+      flavor:
+        description: Flavor tag for the firmware
+        required: false
+        type: string
+        default: "stock"
       prefix:
         description: Firmware prefix
         required: true
@@ -64,7 +69,7 @@ jobs:
           pio run ${{ inputs.build_env != 'NONE' && format('-e {0}', inputs.build_env) || '' }}
           mkdir -vp ${{ github.workspace }}/firmware
           ls -l .pio/build/${{ inputs.build_env }}/
-          mv -v .pio/build/${{ inputs.build_env }}/${{ inputs.build_obj != 'NONE' && inputs.build_obj || 'firmware.bin' }} ${{ github.workspace }}/firmware/${{ inputs.prefix }}-${{ inputs.build_env }}-${{ steps.date.outputs.tag }}-${{ inputs.build_obj != 'NONE' && inputs.build_obj || 'firmware.bin' }}
+          mv -v .pio/build/${{ inputs.build_env }}/${{ inputs.build_obj != 'NONE' && inputs.build_obj || 'firmware.bin' }} ${{ github.workspace }}/firmware/${{ inputs.prefix }}-${{ inputs.build_env }}-${{ steps.date.outputs.tag }}-${{ inputs.flavor }}-${{ inputs.build_obj != 'NONE' && inputs.build_obj || 'firmware.bin' }}
           cd ..
           rm -rf ${{ inputs.build_env }}-${{ steps.date.outputs.tag }}
       - name: Cache the artifacts
