@@ -12,7 +12,7 @@ on:
         description: The build 'environment' to use
         required: false
         type: string
-        default: "NONE"
+        default: "mega2560"
       build_obj:
         description: The build object, or resulting firmware
         type: string
