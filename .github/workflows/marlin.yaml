@@ -56,8 +56,10 @@ jobs:
         run: git clone https://github.com/MarlinFirmware/Marlin ${{ inputs.build_env }}-${{ steps.date.outputs.tag }}
       - name: Copy configuration into place
         run: |
+          set -x
           cp -av ${{ inputs.config_dir }}/*.h ${{ inputs.build_env }}-${{ steps.date.outputs.tag }}/Marlin/
           test "${{ inputs.ini_dir }}" != "NONE" && test -d ${{ inputs.ini_dir }} && cp -av ${{ inputs.ini_dir }}/*.ini ${{ inputs.build_env }}-${{ steps.date.outputs.tag }}/ini/ || echo > /dev/null
+          set +x
       - name: Build Marlin Firmware (${{ inputs.config_dir }})
         run: |
           cd ${{ inputs.build_env }}-${{ steps.date.outputs.tag }}
