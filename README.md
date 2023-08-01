@@ -9,6 +9,10 @@ You can find documentation for the workflows below. The list will be updated as
 new workflows are added, and the documentation for the workflows will be
 regenerated upon changes.
 
+## AutoTOC
+
 [//]: # (AUTODOC)
+
+- [marlin.md](./docs/marlin.md)
 
 [//]: # (AUTODOC)
