@@ -13,6 +13,7 @@ jobs:
     with:
       output_obj: "Target filename of the firmware"
       config_dir: "The directory holding your configs"
+      continue-on-error: False
       prefix: "Firmware prefix"
       artifact_key: "Artifact name to use"
 ```
@@ -73,6 +74,13 @@ jobs:
 - **description**: Flavor tag for the firmware
 - **type**: string
 - **default**: stock
+- **required**: False
+
+### continue-on-error
+
+- **description**: Continue if build step fails (applies to build step only)
+- **type**: bool
+- **default**: False
 - **required**: False
 
 ### prefix
