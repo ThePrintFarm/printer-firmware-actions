@@ -44,7 +44,7 @@ on:
       continue-on-error:
         description: Continue if build step fails (applies to build step only)
         required: false
-        type: bool
+        type: boolean
         default: false
       prefix:
         description: Firmware prefix
